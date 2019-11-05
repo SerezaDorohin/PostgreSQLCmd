@@ -19,7 +19,7 @@ public class Help implements Command {
     @Override
     public String operation(String[] data) {
         StringBuilder result = new StringBuilder();
-        result.append("{yellow}{split}{b}{cyan}  Список всех команд: {n}");
+        result.append("{yellow}{split}{b}{cyan}{next}  Список всех команд: {n}");
         int pos = 0;
 
         for (Command command : MainController.getCommands()) {
@@ -31,7 +31,7 @@ public class Help implements Command {
             pos++;
         }
 
-        result.append("{next}{yellow}{split}");
+        result.append("{next}{yellow}{split}{next}");
 
         return result.toString();
     }

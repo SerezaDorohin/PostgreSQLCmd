@@ -3,7 +3,6 @@ package com.sd.sqlcmd.model;
 import com.sd.sqlcmd.view.Console;
 
 import java.sql.Connection;
-import java.util.Scanner;
 
 public class DatabaseController {
     private Console console = new Console();
@@ -32,7 +31,8 @@ public class DatabaseController {
 
     public void create_table() {
         console.write("{b}{black} >{split}{next}");
-        String table_name = getInfo("название таблицы: ");
+        String table_name = getInfo("название таблицы");
+        String schema_name = getInfo("название схемы");
         String[] columns = getInfo("название/тип/параметры колонок [{n}{cyan}col1/TYPE/PARAM,col2/TYPE.....{b}{black}]").split(",");
         String[] primary_keys = getInfo("поля PRIMARY KEY [{n}{cyan}col1,col2,col3,.....{b}{black}]").split(",");
 
@@ -42,25 +42,28 @@ public class DatabaseController {
             test_rightSyntax(columns);
         } catch (Error e) {
             console.write(" {b}{red}В описании колонок была допущена ошибка. Примерное местоположение: {n}{red}[" + e.getMessage() + "]{next}");
-            console.write("{b}{black} >{split}{next}");
             return;
         }
 
-        try {
-            test_coincidences(columns, primary_keys);
-        } catch (Error e) {
-            console.write(" {b}{red}В поле PRIMARY KEY указаны несущетсвующие колонки.");
-            console.write("{b}{black} >{split}{next}");
-            return;
+        if (primary_keys.length != 1) {
+            try {
+                test_coincidences(columns, primary_keys);
+            } catch (Error e) {
+                console.write(" {b}{red}В поле PRIMARY KEY указаны несущетсвующие колонки.{next}");
+                console.write("{b}{black} >{split}{next}");
+                return;
+            }
         }
+
+        db_manager.create_table(table_name, schema_name, columns, primary_keys);
 
         console.write("{b}{black} >{split}{next}");
     }
 
     private void test_rightSyntax(String[] columns) {
-        for(int i = 0; i < columns.length; i++) {
+        for (int i = 0; i < columns.length; i++) {
             String[] data = columns[i].split("/");
-            if(!(data.length >= 2 && data.length <= 3)) {
+            if (!(data.length >= 2 && data.length <= 3)) {
                 throw new Error(columns[i]);
             }
         }
@@ -81,16 +84,16 @@ public class DatabaseController {
 
     private void test_coincidences(String[] columns, String[] primary_keys) {
         int coincidences_count = 0;
-        for(int i = 0; i < primary_keys.length; i++) {
-            for(int f = 0; f < columns.length; f++) {
+        for (int i = 0; i < primary_keys.length; i++) {
+            for (int f = 0; f < columns.length; f++) {
                 String column_name = columns[f].split("/")[0];
                 String primary_key = primary_keys[i];
-                if(column_name.equals(primary_key)) {
+                if (column_name.equals(primary_key)) {
                     coincidences_count += 1;
                 }
             }
         }
-        if(coincidences_count != primary_keys.length) {
+        if (coincidences_count != primary_keys.length) {
             throw new Error();
         }
     }
@@ -128,6 +131,22 @@ public class DatabaseController {
         switch (operation) {
             case "/create":
                 create_table();
+            case "/createSchema":
+                create_schema();
         }
+    }
+
+    private void create_schema() {
+        console.write("{b}{black} >{split}{next}");
+        while (true) {
+            String schema_name = getInfo("название схемы");
+            if (schema_name.equals("")) {
+                console.write("{b}{green}Необходимо заполнить данное поле!");
+            } else {
+                db_manager.create_schema(schema_name);
+                break;
+            }
+        }
+        console.write("{b}{black} >{split}{next}");
     }
 }
