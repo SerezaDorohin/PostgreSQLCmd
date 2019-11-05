@@ -1,6 +1,8 @@
-package com.sd.sqlcmd.controller.commands;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
 
-import com.sd.sqlcmd.view.View;
+package com.java.sqlcmd.controller.commands;
 
 public interface Command {
     public String description();

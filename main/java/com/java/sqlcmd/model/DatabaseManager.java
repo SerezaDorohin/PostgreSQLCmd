@@ -1,4 +1,8 @@
-package com.sd.sqlcmd.model;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
+
+package com.java.sqlcmd.model;
 
 import java.sql.Connection;
 

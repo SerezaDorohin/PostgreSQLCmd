@@ -1,6 +1,10 @@
-package com.sd.sqlcmd.model;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
 
-import com.sd.sqlcmd.view.Console;
+package com.java.sqlcmd.model;
+
+import com.java.sqlcmd.view.Console;
 
 import java.sql.*;
 
@@ -171,7 +175,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
 
         StringBuilder inquiry = new StringBuilder();
-        inquiry.append("CREATE TABLE " + schema_name + "." + table_name + "( ");
+        inquiry.append("CREATE TABLE " + schema_name + "." + table_name + " ( ");
 //        inquiry.append("CREATE TABLE " + table_name + "(");
 
         for (int i = 0; i < columns.length; i++) {

@@ -1,4 +1,8 @@
-package com.sd.sqlcmd.controller.commands;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
+
+package com.java.sqlcmd.controller.commands;
 
 public class Exit implements Command {
 

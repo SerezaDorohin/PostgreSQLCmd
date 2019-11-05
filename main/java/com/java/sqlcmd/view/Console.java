@@ -1,4 +1,8 @@
-package com.sd.sqlcmd.view;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
+
+package com.java.sqlcmd.view;
 
 import java.util.Scanner;
 

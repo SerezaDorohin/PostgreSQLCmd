@@ -1,7 +1,10 @@
-package com.sd.sqlcmd.controller.commands;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
 
-import com.sd.sqlcmd.model.DatabaseController;
-import com.sd.sqlcmd.view.View;
+package com.java.sqlcmd.controller.commands;
+
+import com.java.sqlcmd.model.DatabaseController;
 
 public class Connect implements Command {
     private static String USER = "postgres";

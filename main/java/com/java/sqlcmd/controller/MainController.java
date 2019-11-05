@@ -1,8 +1,16 @@
-package com.sd.sqlcmd.controller;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
 
+package com.java.sqlcmd.controller;
+
+import com.java.sqlcmd.controller.commands.Command;
+import com.java.sqlcmd.controller.commands.Connect;
+import com.java.sqlcmd.controller.commands.Exit;
+import com.java.sqlcmd.controller.commands.Help;
+import com.java.sqlcmd.view.View;
 import com.sd.sqlcmd.controller.commands.*;
-import com.sd.sqlcmd.view.Console;
-import com.sd.sqlcmd.view.View;
+import com.java.sqlcmd.view.Console;
 
 import java.util.LinkedList;
 import java.util.List;

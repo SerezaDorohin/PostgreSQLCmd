@@ -1,9 +1,10 @@
-package com.sd.sqlcmd.controller.commands;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
 
-import com.sd.sqlcmd.controller.MainController;
-import com.sd.sqlcmd.view.View;
+package com.java.sqlcmd.controller.commands;
 
-import java.util.List;
+import com.java.sqlcmd.controller.MainController;
 
 public class Help implements Command {
     @Override

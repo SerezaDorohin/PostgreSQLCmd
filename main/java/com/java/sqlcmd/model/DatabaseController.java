@@ -1,6 +1,10 @@
-package com.sd.sqlcmd.model;
+/*
+ * Copyright (c) 2019. Sergey Dorokhin
+ */
 
-import com.sd.sqlcmd.view.Console;
+package com.java.sqlcmd.model;
+
+import com.java.sqlcmd.view.Console;
 
 import java.sql.Connection;
 
@@ -132,21 +136,22 @@ public class DatabaseController {
             case "/create":
                 create_table();
             case "/createSchema":
-                create_schema();
+//                create_schema();
+                System.out.println("created");
         }
     }
 
-    private void create_schema() {
-        console.write("{b}{black} >{split}{next}");
-        while (true) {
-            String schema_name = getInfo("название схемы");
-            if (schema_name.equals("")) {
-                console.write("{b}{green}Необходимо заполнить данное поле!");
-            } else {
-                db_manager.create_schema(schema_name);
-                break;
-            }
-        }
-        console.write("{b}{black} >{split}{next}");
-    }
+//    private void create_schema() {
+//        console.write("{b}{black} >{split}{next}");
+//        while (true) {
+//            String schema_name = getInfo("название схемы");
+//            if (schema_name.equals("")) {
+//                console.write("{b}{green}Необходимо заполнить данное поле!");
+//            } else {
+//                db_manager.create_schema(schema_name);
+//                break;
+//            }
+//        }
+//        console.write("{b}{black} >{split}{next}");
+//    }
 }
