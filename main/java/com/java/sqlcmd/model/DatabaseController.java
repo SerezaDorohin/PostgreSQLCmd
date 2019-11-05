@@ -26,14 +26,13 @@ public class DatabaseController {
 
         if (connection == null) {
             console.write(" {b}{red}Ошибка подключения.{next}");
-            return;
         } else {
             console.write(" {b}{green}Подключение к [{n}{yellow}" + DATABASE_NAME + "{b}{green}] успешно.{next}");
             database_menu();
         }
     }
 
-    public void create_table() {
+    private void create_table() {
         console.write("{b}{black} >{split}{next}");
         String table_name = getInfo("название таблицы");
         String schema_name = getInfo("название схемы");
@@ -65,10 +64,10 @@ public class DatabaseController {
     }
 
     private void test_rightSyntax(String[] columns) {
-        for (int i = 0; i < columns.length; i++) {
-            String[] data = columns[i].split("/");
+        for (String column : columns) {
+            String[] data = column.split("/");
             if (!(data.length >= 2 && data.length <= 3)) {
-                throw new Error(columns[i]);
+                throw new Error(column);
             }
         }
     }
@@ -88,11 +87,11 @@ public class DatabaseController {
 
     private void test_coincidences(String[] columns, String[] primary_keys) {
         int coincidences_count = 0;
-        for (int i = 0; i < primary_keys.length; i++) {
-            for (int f = 0; f < columns.length; f++) {
-                String column_name = columns[f].split("/")[0];
-                String primary_key = primary_keys[i];
-                if (column_name.equals(primary_key)) {
+        for (String primaryKey : primary_keys) {
+            for (String column : columns) {
+                String column_name = column.split("/")[0];
+
+                if (column_name.equals(primaryKey)) {
                     coincidences_count += 1;
                 }
             }
@@ -135,23 +134,26 @@ public class DatabaseController {
         switch (operation) {
             case "/create":
                 create_table();
+                break;
             case "/createSchema":
-//                create_schema();
-                System.out.println("created");
+                create_schema();
+                break;
+            default:
+                console.write(" {b}{red}Введена несуществующая команда. {yellow}/help{red} для помощи.{next}");
         }
     }
 
-//    private void create_schema() {
-//        console.write("{b}{black} >{split}{next}");
-//        while (true) {
-//            String schema_name = getInfo("название схемы");
-//            if (schema_name.equals("")) {
-//                console.write("{b}{green}Необходимо заполнить данное поле!");
-//            } else {
-//                db_manager.create_schema(schema_name);
-//                break;
-//            }
-//        }
-//        console.write("{b}{black} >{split}{next}");
-//    }
+    private void create_schema() {
+        console.write("{b}{black} >{split}{next}");
+        while (true) {
+            String schema_name = getInfo("название схемы");
+            if (schema_name.equals("")) {
+                console.write("{b}{green}Необходимо заполнить данное поле!");
+            } else {
+                db_manager.create_schema(schema_name);
+                break;
+            }
+        }
+        console.write("{b}{black} >{split}{next}");
+    }
 }

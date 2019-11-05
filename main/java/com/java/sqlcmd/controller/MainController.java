@@ -9,7 +9,7 @@ import com.java.sqlcmd.controller.commands.Connect;
 import com.java.sqlcmd.controller.commands.Exit;
 import com.java.sqlcmd.controller.commands.Help;
 import com.java.sqlcmd.view.View;
-import com.sd.sqlcmd.controller.commands.*;
+import com.java.sqlcmd.controller.commands.*;
 import com.java.sqlcmd.view.Console;
 
 import java.util.LinkedList;
@@ -56,7 +56,7 @@ public class MainController {
         }
 
         if(!operation_created) {
-            console.write("{b}{red}Введена несуществующая команда. {yellow}/help{red} для помощи.{next}");
+            console.write(" {b}{red}Введена несуществующая команда. {yellow}/help{red} для помощи.{next}");
         }
     }
 }
