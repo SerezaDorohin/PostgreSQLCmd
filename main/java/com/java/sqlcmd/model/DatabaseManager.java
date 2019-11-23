@@ -13,7 +13,7 @@ public interface DatabaseManager {
 
     void create_schema(String schema_name);
 
-    String tables();
+    String tables(String schema_name);
 
     void clear(String table_name);
 }

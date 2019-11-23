@@ -142,6 +142,9 @@ public class DatabaseController {
             case "/help":
                 getHelp();
                 break;
+            case "/tables":
+                tables();
+                break;
             default:
                 console.write(" {b}{red}Введена несуществующая команда. {yellow}/help{red} для помощи.{next}");
                 break;
@@ -191,5 +194,13 @@ public class DatabaseController {
             }
         }
         console.write("{b}{black} >{split}{next}");
+    }
+
+    private void tables() {
+        console.write(" {b}{yellow}{split}{next}");
+        console.write("  {n}{black}Укажите {b}{black}наименование схемы{n}{black}: ");
+        String schema_name = console.read();
+        console.write(db_manager.tables(schema_name));
+        console.write(" {next}{b}{yellow}{split}{next}");
     }
 }

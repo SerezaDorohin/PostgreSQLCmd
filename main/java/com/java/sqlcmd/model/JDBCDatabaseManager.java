@@ -7,6 +7,7 @@ package com.java.sqlcmd.model;
 import com.java.sqlcmd.view.Console;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
@@ -94,10 +95,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try {
             String create_schema = "CREATE SCHEMA " + schema_name;
 
-            statement = connection.createStatement();
-
-            if (schemaIsCreated(schema_name))
+            if (schemaIsCreated(schema_name)) {
+                console.write(" {n}{red}Схема с таким именем {b}{red}уже создана{n}{red}.{next}");
                 return;
+            }
 
             statement = connection.createStatement();
             statement.execute(create_schema);
@@ -125,7 +126,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
             while (rs.next()) {
                 if (rs.getString("schema_name").equals(schema_name)) {
-                    console.write(" {n}{red}Схема с таким именем {b}{red}уже создана{n}{red}.{next}");
                     return true;
                 }
             }
@@ -137,34 +137,42 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public String tables() {
+    public String tables(String schema_name) {
         try {
-            statement = null;
+            if(!schemaIsCreated(schema_name)) {
+                return ("  {b}{red}Указанная схема не создана.");
+            }
+
+            String get_tables = "select table_name " + "from information_schema.tables " + "where table_schema='" + schema_name + "'";
+
             statement = connection.createStatement();
+            statement.execute(get_tables);
 
-            String inquiry = "SELECT TABLE_NAME \n" +
-                    "FROM INFORMATION_SCHEMA.TABLES\n" +
-                    "WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='public' ";
+            ResultSet rs = statement.executeQuery(get_tables);
+            StringBuilder strB = new StringBuilder();
 
-            statement.execute(inquiry);
+            strB.append("  {b}{black}[ ");
+
+            while (rs.next()) {
+                strB.append("{b}{yellow}|");
+                strB.append("{b}{green}" + rs.getString("table_name"));
+                strB.append("{b}{yellow}| ");
+            }
+
+            strB.append("{b}{black}]");
+
+            return strB.toString();
         } catch (SQLException e) {
-            console.write(" {b}{red}Ошибка при создании таблицы. Перезапустите приложение.{next}");
+           return ("  {b}{red}Ошибка при получении данных.");
         } finally {
-            try {
-                ResultSet result = statement.getResultSet();
-                if (statement != null) {
-                    try {
-                        statement.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-                return result.toString();
-            } catch (SQLException e) {
-                console.write("{b}{red}Ошибка при получении названий таблиц.{next}");
             }
         }
-        return "";
     }
 
 
@@ -176,7 +184,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
         StringBuilder inquiry = new StringBuilder();
         inquiry.append("CREATE TABLE " + schema_name + "." + table_name + " ( ");
-//        inquiry.append("CREATE TABLE " + table_name + "(");
 
         for (int i = 0; i < columns.length; i++) {
             String[] data = columns[i].split("/");
