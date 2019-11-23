@@ -7,6 +7,7 @@ package com.java.sqlcmd.model;
 import com.java.sqlcmd.view.Console;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 public class DatabaseController {
     private Console console = new Console();
@@ -135,12 +136,47 @@ public class DatabaseController {
             case "/create":
                 create_table();
                 break;
-            case "/createSchema":
+            case "/schema":
                 create_schema();
+                break;
+            case "/help":
+                getHelp();
                 break;
             default:
                 console.write(" {b}{red}Введена несуществующая команда. {yellow}/help{red} для помощи.{next}");
+                break;
         }
+    }
+
+    private void getHelp() {
+        ArrayList<String> commands = new ArrayList<>();
+        ArrayList<String> description = new ArrayList<>();
+
+        /* /help */    commands.add("/help");       description.add("вывод всех доступных команд");
+        /* /create */  commands.add("/create");     description.add("создание таблицы");
+        /* /schema */  commands.add("/schema");     description.add("создание или подтверждение создания схемы");
+        /* /exit */    commands.add("/exit");       description.add("отключение от БД");
+        commands.add("test");
+
+        if(commands.size() == 0 || description.size() == 0) {
+            console.write(" {b}{red}Ошибка при выводе помощи. [массивы пустые]{next}");
+            return;
+        }
+
+        if(commands.size() != description.size()) {
+            console.write(" {b}{red}Ошибка при выводе помощи. [несовпадение длины массивов]{next}");
+            return;
+        }
+
+        console.write(" {b}{yellow}{split}{next}");
+        console.write("  {b}{green}Список всех команд управления базой данных:");
+
+        for(int index = 0; index < commands.size(); index++) {
+            console.write("{next}");
+            console.write("    ");
+            console.write("{b}{black}" + (index + 1) + ". {rs}{b}{blue}" + commands.get(index) + " {n}{black} - " + description.get(index) + "{rs}");
+        }
+        console.write(" {next}{b}{yellow}{split}{next}");
     }
 
     private void create_schema() {

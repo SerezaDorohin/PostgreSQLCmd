@@ -7,9 +7,6 @@ package com.java.sqlcmd.controller.commands;
 import com.java.sqlcmd.model.DatabaseController;
 
 public class Connect implements Command {
-    private static String USER = "postgres";
-    private static String PASS = "root";
-
     @Override
     public String description() {
         return "\033[1;33m" + "\u001B[35m" + "/connect" + "\033[0;37m" + " - подключение к базе данных";

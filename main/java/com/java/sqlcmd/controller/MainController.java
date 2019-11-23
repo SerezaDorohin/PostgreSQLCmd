@@ -8,23 +8,22 @@ import com.java.sqlcmd.controller.commands.Command;
 import com.java.sqlcmd.controller.commands.Connect;
 import com.java.sqlcmd.controller.commands.Exit;
 import com.java.sqlcmd.controller.commands.Help;
-import com.java.sqlcmd.view.View;
-import com.java.sqlcmd.controller.commands.*;
 import com.java.sqlcmd.view.Console;
+import com.java.sqlcmd.view.View;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class MainController {
     private static List<Command> commands = new LinkedList<Command>();
-    private View console = new Console();
+    private View console;
 
     public static List<Command> getCommands() {
         return commands;
     }
 
-    public void run() {
-        this.console = console;
+    void run() {
+        this.console = new Console();
 
         // add commands
         commands.add(new Help());
@@ -42,7 +41,7 @@ public class MainController {
         }
     }
 
-    public void operation_chooser(String operation) {
+    private void operation_chooser(String operation) {
         String[] data = operation.split(" ");
         String name = data[0];
         boolean operation_created = false;
