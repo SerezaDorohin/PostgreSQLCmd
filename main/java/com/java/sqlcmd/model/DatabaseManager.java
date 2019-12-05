@@ -15,5 +15,5 @@ public interface DatabaseManager {
 
     String tables(String schema_name);
 
-    void clear(String table_name);
+    void clear(String table_name, String schema_name);
 }

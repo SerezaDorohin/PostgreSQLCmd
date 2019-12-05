@@ -7,7 +7,6 @@ package com.java.sqlcmd.model;
 import com.java.sqlcmd.view.Console;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
@@ -139,8 +138,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public String tables(String schema_name) {
         try {
-            if(!schemaIsCreated(schema_name)) {
-                return ("  {b}{red}Указанная схема не создана.");
+            if (!schemaIsCreated(schema_name)) {
+                return (" {b}{red}Указанная схема не создана.");
             }
 
             String get_tables = "select table_name " + "from information_schema.tables " + "where table_schema='" + schema_name + "'";
@@ -151,11 +150,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
             ResultSet rs = statement.executeQuery(get_tables);
             StringBuilder strB = new StringBuilder();
 
-            strB.append("  {b}{black}[ ");
+            strB.append(" {b}{black}[ ");
 
             while (rs.next()) {
                 strB.append("{b}{yellow}|");
-                strB.append("{b}{green}" + rs.getString("table_name"));
+                strB.append("{b}{green}").append(rs.getString("table_name"));
                 strB.append("{b}{yellow}| ");
             }
 
@@ -163,7 +162,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
             return strB.toString();
         } catch (SQLException e) {
-           return ("  {b}{red}Ошибка при получении данных.");
+            return (" {b}{red}Ошибка при получении данных.");
         } finally {
             if (statement != null) {
                 try {
@@ -176,9 +175,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
 
-
     private String create_table_inquiry(String table_name, String schema_name, String[] columns, String[] primary_keys) throws SQLException {
-        if(!schemaIsCreated(schema_name)) {
+        if (!schemaIsCreated(schema_name)) {
             create_schema(schema_name);
         }
 
@@ -187,9 +185,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
         for (int i = 0; i < columns.length; i++) {
             String[] data = columns[i].split("/");
-            for (int f = 0; f < data.length; f++) {
-                inquiry.append(data[f] + " ");
-            }
+            for (String datum : data) inquiry.append(datum).append(" ");
             if ((i + 1) != columns.length) {
                 inquiry.append(",");
             }
@@ -212,7 +208,39 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void clear(String table_name) {
-        // body
+    public void clear(String table_name, String schema_name) {
+        try {
+            if (!schemaIsCreated(schema_name))
+                throw new Error();
+            String get_tables = "select table_name " + "from information_schema.tables " + "where table_schema='" + schema_name + "'";
+            String clear = "DELETE FROM " + schema_name + "." + table_name;
+
+            statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(get_tables);
+            boolean isCreated = false;
+
+            while (rs.next()) {
+                if (rs.getString("table_name").equals(table_name)) {
+                    isCreated = true;
+                    break;
+                }
+            }
+
+            if(!isCreated)
+                throw new Exception();
+
+            statement = connection.createStatement();
+            statement.execute(clear);
+        } catch (SQLException e) {
+            console.write(" {b}{red}Произошла ошибка при подключении к базе данных.{next}");
+            return;
+        } catch (Error e) {
+            console.write(" {b}{red}Указанная схема {b}{black}" + schema_name + "{b}{red} не существует.{next}");
+            return;
+        } catch (Exception e) {
+            console.write(" {b}{red}Указанная таблица {b}{black}" + table_name + "{b}{red} не существует.{next}");
+            return;
+        }
+        console.write(" {b}{green}Очищение таблицы {b}{black}" + schema_name + "." + table_name + " {b}{green}прошло успешно.{next}");
     }
 }

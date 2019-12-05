@@ -145,10 +145,21 @@ public class DatabaseController {
             case "/tables":
                 tables();
                 break;
+            case "/clear":
+                clearTable();
+                break;
             default:
                 console.write(" {b}{red}Введена несуществующая команда. {yellow}/help{red} для помощи.{next}");
                 break;
         }
+    }
+
+    private void clearTable() {
+        console.write("{b}{black} >{split}{next}");
+        String schema_name = getInfo("название схемы");
+        String table_name = getInfo("название таблицы");
+        db_manager.clear(table_name, schema_name);
+        console.write("{b}{black} >{split}{next}");
     }
 
     private void getHelp() {
@@ -159,7 +170,8 @@ public class DatabaseController {
         /* /create */  commands.add("/create");     description.add("создание таблицы");
         /* /schema */  commands.add("/schema");     description.add("создание или подтверждение создания схемы");
         /* /exit */    commands.add("/exit");       description.add("отключение от БД");
-        commands.add("test");
+        /* /tables */  commands.add("/tables");     description.add("вывод названий таблиц в указанной схеме");
+        /* /clear */   commands.add("/clear");      description.add("очищение от информации определённой таблицы");
 
         if(commands.size() == 0 || description.size() == 0) {
             console.write(" {b}{red}Ошибка при выводе помощи. [массивы пустые]{next}");
@@ -198,7 +210,7 @@ public class DatabaseController {
 
     private void tables() {
         console.write(" {b}{yellow}{split}{next}");
-        console.write("  {n}{black}Укажите {b}{black}наименование схемы{n}{black}: ");
+        console.write(" {n}{black}Укажите {b}{black}наименование схемы{n}{black}: ");
         String schema_name = console.read();
         console.write(db_manager.tables(schema_name));
         console.write(" {next}{b}{yellow}{split}{next}");
